@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Button</title>
+
+    <style>
+        .card{
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px;
+            background-color: black;    
+            color: aliceblue;   
+        }
+
+</style>
+</head>
+
+<body>
+    <input type="text" id="input" placeholder="O que você está pensando agora?">
+
+    <button id="postarburtton" onclick="Postar()">Postar</button>
+
+    <div id="feed">
+    </div>
+
+    
+</body>
+<script>
+
+    //criar arrays no localstorage
+    let posts = JSON.parse(localStorage.getItem('posts')) || []
+
+
+    //selecionando elementos html
+    let input  = document.getElementById('input')
+    let postarbutton = document.getElementById('postarbutton')
+    let feed = document.getElementById('feed')
+
+    function Renderizar(){
+        feed.innerHTML = ''
+
+        posts.forEach(function(item, indice) {
+            criarCard(item, indice)
+        });
+    }
+    
+
+
+
+    function criarCard(item, indice){
+
+        let texto = item.content
+        let data = item.data
+        let post = document.createElement('div')
+        let textpost = document.createElement('p')
+        let datapost = document.createElement('p')
+        textpost.innerText = texto
+        datapost.innerText = data
+        post.appendChild(textpost)
+        post.appendChild(datapost)
+        feed.appendChild(post)
+
+        //criando botao apagar
+        let apagarbutton = document.createElement('button')
+        apagarbutton.innerText = 'apagar'
+        textpost.appendChild(apagarbutton)
+        apagarbutton.onclick = function(){apagarpost(indice)}
+
+        //criando botao curtir
+        let curtirbutton = document.createElement('button')
+        curtirbutton.innerText = 'curtir'
+        textpost.appendChild(curtirbutton)
+        curtirbutton.onclick = function(){curtir(indice)}
+
+        // criando numero de curtidas
+        let curtidas = document.createElement('p')
+        curtidas.innerText = item.curtida
+        textpost.appendChild(curtidas)
+
+
+
+
+    }
+
+
+
+
+
+
+    function apagarpost(indice){
+
+        posts.splice(indice, 1)
+
+        localStorage.setItem('posts', JSON.stringify(posts))
+
+        Renderizar()
+
+    }
+
+
+    function Postar(){
+
+
+        let datapost = new Date().toLocaleString('pt-BR')
+
+        let texto = input.value 
+        let postdados = {"content": texto, "data": datapost, "curtida": 0}    
+        console.log(postdados)
+
+        if (texto.trim() == ''){
+            alert("Insira algo")
+            
+        }else{
+
+            posts.unshift(postdados)
+
+            localStorage.setItem('posts', JSON.stringify(posts))
+
+            input.value = ''
+
+            Renderizar()
+
+
+        }
+
+    }
+
+        function curtir(indice){
+
+        posts[indice].curtida++
+        
+        console.log(posts.curtida)
+        
+        localStorage.setItem('posts', JSON.stringify(posts))
+        Renderizar()
+    }
+
+    Renderizar()
+</script>
+
+</html>
