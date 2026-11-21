@@ -72,7 +72,7 @@
         let apagarbutton = document.createElement('button')
         apagarbutton.innerText = 'apagar'
         textpost.appendChild(apagarbutton)
-        apagarbutton.onclick = function(){apagarpost(indice)}
+        apagarbutton.onclick = function(){apagarpost(item.id)}
 
         //criando botao curtir
         let curtirbutton = document.createElement('button')
@@ -95,13 +95,11 @@
 
 
 
-    function apagarpost(indice){
+    async function apagarpost(id){
 
-        posts.splice(indice, 1)
+       await fetch('/posts/' + id, {method: 'DELETE'})
 
-        localStorage.setItem('posts', JSON.stringify(posts))
-
-        Renderizar()
+        carregarPosts()
 
     }
 
