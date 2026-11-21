@@ -29,8 +29,14 @@
 </body>
 <script>
 
+    async function carregarPosts(){
+        let resposta = await fetch('/posts')
+        posts = await resposta.json()
+        Renderizar()
+    }
+
     //criar arrays no localstorage
-    let posts = JSON.parse(localStorage.getItem('posts')) || []
+    let posts = []
 
 
     //selecionando elementos html
@@ -100,7 +106,7 @@
     }
 
 
-    function Postar(){
+    async function Postar(){
 
 
         let datapost = new Date().toLocaleString('pt-BR')
@@ -114,13 +120,15 @@
             
         }else{
 
-            posts.unshift(postdados)
-
-            localStorage.setItem('posts', JSON.stringify(posts))
+            await fetch('/posts', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json' },
+                body: JSON.stringify(postdados)
+            })
 
             input.value = ''
 
-            Renderizar()
+            carregarPosts()
 
 
         }
@@ -137,7 +145,7 @@
         Renderizar()
     }
 
-    Renderizar()
+    carregarPosts()
 </script>
 
 </html>
