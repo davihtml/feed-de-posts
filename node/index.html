@@ -78,7 +78,7 @@
         let curtirbutton = document.createElement('button')
         curtirbutton.innerText = 'curtir'
         textpost.appendChild(curtirbutton)
-        curtirbutton.onclick = function(){curtir(indice)}
+        curtirbutton.onclick = function(){curtir(item.id)}
 
         // criando numero de curtidas
         let curtidas = document.createElement('p')
@@ -133,14 +133,14 @@
 
     }
 
-        function curtir(indice){
+        async function curtir(id){
 
-        posts[indice].curtida++
-        
-        console.log(posts.curtida)
-        
-        localStorage.setItem('posts', JSON.stringify(posts))
-        Renderizar()
+            await fetch('/posts/' + id, {
+                method: 'PATCH'
+            })
+
+    
+        carregarPosts()
     }
 
     carregarPosts()
